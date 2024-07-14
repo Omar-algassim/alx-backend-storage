@@ -1,8 +1,7 @@
 --create table uniq_users
 --create user table with id email and name
-
-CREATE TABLE if NOT EXISTS users(
-    id INT NOTNULL INCREMENT PRIMARY KEY,
-    email VARCHAR(255) UNIQUE NOT NULL,
+CREATE TABLE IF NOT EXISTS users (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255)
-)
+);
