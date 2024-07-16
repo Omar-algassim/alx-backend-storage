@@ -1,0 +1,2 @@
+// update documnt
+db.school.update({"name" : "Holberton school"}, {$set:{"address" : true}})
