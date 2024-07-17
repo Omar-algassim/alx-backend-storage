@@ -10,7 +10,7 @@ import functools
 def count_calls(methode: Callable) -> Callable:
     """decorater funcction to count how many cach class is call"""
     @functools.wraps(methode)
-    def wrapper(self, *args, **kwargs):
+    def wrapper(self, *args, **kwargs) -> Callable:
         """increase the value of count"""
         self._redis.incr(methode.__qualname__)
         return methode(self, *args, **kwargs)
