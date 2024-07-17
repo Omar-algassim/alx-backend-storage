@@ -2,7 +2,7 @@
 """redies exercise"""
 import redis
 import uuid
-from typing import Union, Callable
+from typing import Union, Callable, Any
 import functools
 
 
@@ -10,7 +10,7 @@ import functools
 def count_calls(methode: Callable) -> Callable:
     """decorater funcction to count how many cach class is call"""
     @functools.wraps(methode)
-    def wrapper(self, *args, **kwargs) -> Callable:
+    def wrapper(self, *args, **kwargs) -> Any:
         """increase the value of count"""
         self._redis.incr(methode.__qualname__)
         return methode(self, *args, **kwargs)
