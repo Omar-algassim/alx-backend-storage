@@ -24,3 +24,13 @@ class Cache():
         if fn:
             return fn(data)
         return data
+
+    def get_str(self, data: bytes) -> str:
+        """implement get str with get method"""
+        str_data = self.get(data, str())
+        return str_data        
+    
+    def get_int(self, data: bytes) -> int:
+        """implement get int with get method"""
+        int_data = self.get(data, int())
+        return int_data
