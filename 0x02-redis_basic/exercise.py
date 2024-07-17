@@ -4,14 +4,16 @@ import redis
 import uuid
 from typing import Union, Callable
 
+
+
 class Cache():
     """cache class"""
-    
+
     def __init__(self):
         """init"""
         self._redis = redis.Redis()
         self._redis.flushdb(True)
-    
+
     def store(self, data: Union[str, float, int, bytes]) -> str:
         """store data with specific id"""
         id = str(uuid.uuid4())
@@ -25,12 +27,12 @@ class Cache():
             return fn(data)
         return data
 
-    def get_str(self, data: bytes) -> str:
+    def get_str(self, key: str) -> str:
         """implement get str with get method"""
-        str_data = self.get(data, str())
+        str_data = self.get(key, str())
         return str_data        
-    
-    def get_int(self, data: bytes) -> int:
+
+    def get_int(self, key: str) -> int:
         """implement get int with get method"""
-        int_data = self.get(data, int())
+        int_data = self.get(key, int())
         return int_data
