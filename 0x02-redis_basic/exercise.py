@@ -6,7 +6,6 @@ from typing import Union, Callable, Any
 import functools
 
 
-
 def count_calls(methode: Callable) -> Callable:
     """decorater funcction to count how many cach class is call"""
     @functools.wraps(methode)
@@ -15,6 +14,7 @@ def count_calls(methode: Callable) -> Callable:
         self._redis.incr(methode.__qualname__)
         return methode(self, *args, **kwargs)
     return wrapper
+
 
 def call_history(methode: Callable) -> Callable:
     """methode save the output and input in list"""
@@ -31,6 +31,7 @@ def call_history(methode: Callable) -> Callable:
         return output
     return wrapper
 
+
 def replay(method):
     """replay with information about call history"""
     redis_ = getattr(method.__self__, "_redis", None)
@@ -39,7 +40,9 @@ def replay(method):
     output_list = redis_.lrange(f"{method.__qualname__}:outputs", 0, -1)
     print(f"{method.__name__} was called {int(call_num)} times:")
     for inp, outp in zip(input_list, output_list):
-        print(f"{method.__qualname__}(*{inp.decode('utf-8')}) -> {outp.decode('utf-8')}")
+        print(f"{method.__qualname__}(*{inp.decode('utf-8')}) ->\
+            {outp.decode('utf-8')}")
+
 
 class Cache():
     """cache class"""
@@ -57,7 +60,9 @@ class Cache():
         self._redis.mset({id: data})
         return id
 
-    def get(self, key: str, fn: Union[Callable, None]=None) -> Union[str, bytes, float, int]:
+    def get(self, key: str,
+            fn: Union[Callable, None] = None
+            ) -> Union[str, bytes, float, int]:
         """get data from redis and conver thee byte to data"""
         data = self._redis.get(key)
         if fn:
@@ -67,7 +72,7 @@ class Cache():
     def get_str(self, key: str) -> str:
         """implement get str with get method"""
         str_data = self.get(key, lambda x: x.decode('utf-8'))
-        return str_data        
+        return str_data
 
     def get_int(self, key: str) -> int:
         """implement get int with get method"""
