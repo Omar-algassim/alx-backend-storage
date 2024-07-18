@@ -16,6 +16,21 @@ def count_calls(methode: Callable) -> Callable:
         return methode(self, *args, **kwargs)
     return wrapper
 
+def call_history(methode: Callable) -> Callable:
+    """methode save the output and input in list"""
+    @functools.wraps(methode)
+    def wrapper(self, *args, **kwargs):
+        """wrapper for decarator"""
+        out_key = f"{methode.__qualname__}:outputs"
+        in_key = f"{methode.__qualname__}:inputs"
+        if isinstance(self._redis, redis.Redis):
+            self._redis.rpush(in_key, str(args))
+        output = methode(self, *args, **kwargs)
+        if isinstance(self._redis, redis.Redis):
+            self._redis.rpush(out_key, output)
+        return output
+    return wrapper
+
 class Cache():
     """cache class"""
 
@@ -24,6 +39,7 @@ class Cache():
         self._redis = redis.Redis()
         self._redis.flushdb(True)
 
+    @call_history
     @count_calls
     def store(self, data: Union[str, float, int, bytes]) -> str:
         """store data with specific id"""
