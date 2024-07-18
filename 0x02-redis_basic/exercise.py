@@ -31,6 +31,16 @@ def call_history(methode: Callable) -> Callable:
         return output
     return wrapper
 
+def replay(method):
+    """replay with information about call history"""
+    redis_ = getattr(method.__self__, "_redis", None)
+    call_num = redis_.get(method.__qualname__)
+    input_list = redis_.lrange(f"{method.__qualname__}:inputs", 0, -1)
+    output_list = redis_.lrange(f"{method.__qualname__}:outputs", 0, -1)
+    print(f"{method.__name__} was called {int(call_num)} times:")
+    for inp, outp in zip(input_list, output_list):
+        print(f"{method.__qualname__}(*{inp.decode('utf-8')}) -> {outp.decode('utf-8')}")
+
 class Cache():
     """cache class"""
 
